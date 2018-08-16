@@ -1,0 +1,11 @@
+#!/bin/bash
+wget https://nodejs.org/download/release/v8.11.2/node-v8.11.2-linux-x64.tar.gz
+tar zxvf node-v8.11.2-linux-x64.tar.gz > /dev/null
+mv node-v8.11.2-linux-x64 node && cp -r node /usr/local/
+
+cat >> /etc/profile << EOF
+export NODE_HOME=/usr/local/node
+export PATH=$NODE_PATH/bin:$PATH
+EOF
+
+source /etc/profile

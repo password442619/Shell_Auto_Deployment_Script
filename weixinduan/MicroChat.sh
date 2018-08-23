@@ -53,14 +53,14 @@ http {
         location /api {
 			proxy_pass  http://111.3.68.233:40043/;
 			proxy_set_header Host $host:$server_port;
-			proxy_set_header X-Forwarded-Host $server_name;
+			proxy_set_header Cookie $http_cookie;
 			proxy_set_header X-Real-IP $remote_addr;
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
         location /weather {
             proxy_pass  http://192.168.1.178:8090/;
 			proxy_set_header Host $host:$server_port;
-			proxy_set_header X-Forwarded-Host $server_name;
+			proxy_set_header Cookie $http_cookie;
 			proxy_set_header X-Real-IP $remote_addr;
 			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }

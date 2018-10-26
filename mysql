@@ -1,4 +1,0 @@
-cd /mnt/
-rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
-yum install -y mysql-community-server
-systemctl start mysqld

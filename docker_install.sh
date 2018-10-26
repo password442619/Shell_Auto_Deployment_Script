@@ -1,4 +1,4 @@
-
+#!/bin/bash
 docker run hello-world
 if [ $? -eq 0 ]; then
 	echo 'docker has been installed.'

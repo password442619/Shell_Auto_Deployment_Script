@@ -1,0 +1,17 @@
+#查看调度器的状态。
+show variables like '%event_scheduler%';
+#打开调度器，1打开，0关闭
+set global event_scheduler=1;
+#每分钟插入到表中数据
+create event test.event_minute on schedule every  1 minute do insert into events_list values('event_now', now());
+#从2017年3月7日2点起，每过一年调用一次存储过程ClearHis(2)
+CREATE  EVENT `e_ClearHis` ON SCHEDULE EVERY 1 YEAR STARTS '2017-03-07 02:00:00' ON COMPLETION PRESERVE ENABLE DO call ClearHis(2);
+#查看当前所在库的事件
+show events;
+#可以修改事件，不必删除再创建，例如修改第一个例子为30秒间隔
+alter event test.event_minute on schedule every 30 second do insert into events_list values('event_now', now());
+#修改上面例子为不活动和再次活动
+alter event test.event_second disable;
+alter event test.event_second enable;
+#删除事件
+DROP EVENT [IF EXISTS] event_name

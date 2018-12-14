@@ -2,6 +2,8 @@
 show variables like '%event_scheduler%';
 #打开调度器，1打开，0关闭
 set global event_scheduler=1;
+#永久开启事件
+在my.cnf的[mysqld]下添加event_scheduler=ON 然后重启mysql
 #每分钟插入到表中数据
 create event test.event_minute on schedule every  1 minute do insert into events_list values('event_now', now());
 #从2017年3月7日2点起，每过一年调用一次存储过程ClearHis(2)

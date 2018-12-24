@@ -12,7 +12,7 @@ module.exports = {
 		}
 	]
 }
-举例：
+举例apps中的内容：
 {
   "name"        : "fis-receiver",  // 应用名称
   "script"      : "./bin/www",  // 实际启动脚本

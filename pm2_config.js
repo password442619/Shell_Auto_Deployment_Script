@@ -35,3 +35,5 @@ module.exports = {
       "NODE_ENV": "production"  // 环境参数，当前指定为生产环境
   }
 }
+详细的配置文件写法，请参考：
+http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/

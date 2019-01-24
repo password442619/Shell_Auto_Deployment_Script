@@ -12,5 +12,7 @@ tar czf /storage/databak/data-$(date +%y%m%d).tar.gz *-$(date +%y%m%d).sql
 rm -f blue* e* jcbase* video*
 
 #crontab -l 产看cron策略，crontab -e 修改cron策略
+0 0 * * * /mnt/mysqldump.sh
+30 2 * * * find /storage/databak/ -mtime +6 -name "*.*" -exec rm -fr {} \;
 #脚本在/mnt/mysqldump.sh
 #数据备份在/storage/databak/

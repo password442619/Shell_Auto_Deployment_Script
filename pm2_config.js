@@ -1,17 +1,20 @@
-module.exports = {
-	apps: [
-		{
-			name: 'rdb-web',
-			script: 'java',
-			args:[
-				'-jar',
-				'./rdb-web.jar'
-			],
-			cwd: '.',
-			interpreter: ''
-		}
-	]
-}
+
+ module.exports = {
+     apps: [
+         {
+             name: 'rdb-read',
+             script: 'java',
+             args:[
+                 '-jar',
+                 './rdb-read.jar'
+             ],
+             cwd: '.',
+             interpreter: '',
+             error_file: './logs/rdb-read-err.log',
+             out_file: './logs/rdb-read-out.log'
+         }
+     ]
+ }
 举例apps中的内容：
 {
   "name"        : "fis-receiver",  // 应用名称

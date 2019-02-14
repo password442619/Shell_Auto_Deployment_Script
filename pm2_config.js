@@ -37,3 +37,20 @@ module.exports = {
 }
 详细的配置文件写法，请参考：
 http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/
+
+
+#pm2 config for tomcat
+
+module.exports = {
+        apps: [
+                {
+                        name: 'map_boundary',
+                        script: 'catalina.sh',
+                        args:[
+                                'run'
+                        ],
+                        cwd: '.',
+                        interpreter: '/bin/bash'
+                }
+        ]
+}

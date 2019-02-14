@@ -12,9 +12,9 @@ p=`grep NODE_HOME /etc/profile|wc -l`
 if [ $p -eq 0 ]; then
   echo "export NODE_HOME=/usr/local/node" >> /etc/profile
   echo "export PATH=\$NODE_HOME/bin:\$PATH" >> /etc/profile
-  source /etc/profile
 else
   echo "node home has been setted!"
 fi
 
 rm -fr node*
+source /etc/profile

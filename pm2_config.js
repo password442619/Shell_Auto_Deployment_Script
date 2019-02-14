@@ -38,9 +38,6 @@
       "NODE_ENV": "production"  // 环境参数，当前指定为生产环境
   }
 }
-详细的配置文件写法，请参考：
-http://pm2.keymetrics.io/docs/usage/pm2-doc-single-page/
-
 
 #pm2 config for tomcat
 
@@ -57,3 +54,6 @@ module.exports = {
                 }
         ]
 }
+
+详细的配置文件写法，请参考：
+https://pm2.io/doc/en/runtime/overview/?utm_source=pm2&utm_medium=website&utm_campaign=rebranding

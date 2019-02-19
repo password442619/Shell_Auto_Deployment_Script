@@ -7,4 +7,4 @@ touch /etc/default/docker
 echo "DOCKER_OPTS=\"\$DOCKER_OPTS --registry-mirror=http://f2d6cb40.m.daocloud.io\"" > /etc/default/docker
 systemctl restart docker
 docker pull jenkins/jenkins
-#用阿里云的容器镜像服务，阿里云可用支付宝登录
+#1、用阿里云的容器镜像服务，阿里云可用支付宝登录。2、安装完docker后，直接docker pull jenkins/jenkins

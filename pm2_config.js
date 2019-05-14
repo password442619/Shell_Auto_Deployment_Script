@@ -56,4 +56,4 @@ module.exports = {
 }
 
 详细的配置文件写法，请参考：
-https://pm2.io/doc/en/runtime/overview/?utm_source=pm2&utm_medium=website&utm_campaign=rebranding
+https://pm2.io/doc/zh/runtime/guide/ecosystem-file/

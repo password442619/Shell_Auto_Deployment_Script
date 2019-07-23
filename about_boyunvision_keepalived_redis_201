@@ -1,0 +1,57 @@
+[root]vim /etc/keepalived/keepalived.conf
+~~~
+! Configuration File for keepalived
+
+global_defs {
+   router_id redis_201
+}
+
+vrrp_script chk_redis
+{
+	script "/etc/keepalived/scripts/redis_check.sh"  #检测脚本的位置，记得加可执行权限。
+	interval 2
+	timeout 2
+	fall 3
+}
+
+vrrp_instance redis {
+	state MASTER
+	interface eno1
+	virtual_router_id 50
+	priority 150
+	nopreempt
+	advert_int 1
+	authentication {
+		auth_type PASS
+		auth_pass 1111
+	}
+	track_script {
+		chk_redis
+	}
+}
+~~~
+
+#以下为检测脚本，检测日志保存为/var/log/keepalived_redis_check.log（大小超过10000000B时，会被清空）。
+[root]vim /etc/keepalived/scripts/redis_check.sh
+~~~
+#!/bin/bash
+A=`/usr/bin/redis-cli -h 192.168.1.201 -p 6379 PING`
+LOGFILE="/var/log/keepalived_redis_check.log"
+
+file_size=`ls -l /var/log/keepalived_redis_check.log |awk -F' ' '{print $5}'`
+echo $file_size
+if [ `echo "$file_size > 10000000"|bc` -eq 1 ];then
+	cat /dev/null > /var/log/keepalived_redis_check.log
+fi
+
+echo "[CHECK]" >> $LOGFILE
+date >> $LOGFILE
+if [ $A == "PONG" ];then
+	echo "Success: redis-cli -h $1 -p $2 ping $A" >> $LOGFILE 2>&1
+	exit 0
+else
+	echo "Failed: redis-cli -h $1 -p $2 ping $A" >> $LOGFILE 2>&1
+	systemctl restart redis
+	exit 1
+fi
+~~~

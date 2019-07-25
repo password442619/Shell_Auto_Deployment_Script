@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#python3的环境，nmap模块要从官网下载最新的。
 import sys
 import nmap
 
 scan_row = []
-input_data = raw_input('Please input hosts and port:')
+input_data = input('Please input hosts and port:')
 scan_row = input_data.split(" ")
 if len(scan_row)!=2:
 	print "Input errors,example \"192.168.2.0/24 80,443,22\""
@@ -23,7 +24,7 @@ except:
 try:
 	#调用扫描方法，参数指定扫描主机hosts,nmap扫描命令行参数arguments
 	nm.scan(hosts=hosts, arguments=' -v -sS -p '+port)
-except Exception,e:
+except Exception as e:
 	print "Scan error:"+str(e)
 	
 for host in nm.all_hosts():  #遍历扫描主机

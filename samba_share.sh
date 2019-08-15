@@ -30,3 +30,11 @@ EOF
 firewall-cmd --add-service=samba --permanent
 firewall-cmd --reload
 systemctl restart smb
+
+#以上脚本是搭建好了samba服务器，在客户端使用时，编辑/etc/fstab,加入一行，
+#例如//192.168.1.4/boyun_samba_share	/home/boyun/samba cifs defaults,guest 0 0
+#切记/192.168.1.4/boyun_samba_share中的boyun_samba_share对应smb.conf中你自己加入的项名字，
+#就是用中括号扩起来的名字，比如脚本上是[boyun_samba_share]。
+#然后安装cifs-utils,用yum命令安装即可。
+#执行mount -a。
+#执行df -h看是否挂载成功。

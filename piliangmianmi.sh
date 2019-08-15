@@ -8,12 +8,12 @@ do
     ip=$(echo "$p"|awk -F '[:]' '{print $1}')
     password=$(echo "$p"|awk -F '[:]' '{print $2}')
     expect -c "
-    spawn ssh-copy-id -i /root/.ssh/id_rsa.pub root@$ip
-          expect {
-               \"*yes/no*\" {send \"yes\r\"; exp_continue}
-               \"*password*\" {send \"$password\r\"; exp_continue}
-               \"*Password*\" {send \"$password\r\";}
-          }
+        spawn ssh-copy-id -i /root/.ssh/id_rsa.pub root@$ip
+        expect {
+            \"*yes/no*\" {send \"yes\r\"; exp_continue}
+            \"*password*\" {send \"$password\r\"; exp_continue}
+            \"*Password*\" {send \"$password\r\";}
+        }
     "
 done
 

@@ -25,7 +25,8 @@ cat << EOF >> /etc/samba/smb.conf
         path = /boyun_samba_share
         browseable = yes
         writeable = yes
-        guest ok =yes
+        guest ok = yes
+	public = yes
 EOF
 firewall-cmd --add-service=samba --permanent
 firewall-cmd --reload

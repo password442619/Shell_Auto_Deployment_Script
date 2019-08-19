@@ -1,5 +1,5 @@
   #/bin/bash
-  yum makecache fast > /dev/null
+  yum clean all && yum makecache fast > /dev/null
   yum install gcc pcre-devel zlib-devel -y > /dev/null
   wget http://nginx.org/download/nginx-1.14.2.tar.gz > /dev/null
   tar zxvf nginx-1.14.2.tar.gz > file.txt

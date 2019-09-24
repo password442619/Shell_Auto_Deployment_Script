@@ -1,5 +1,5 @@
 #!/bin/bash
-docker-compose -v
+docker-compose -v > /dev/null
 if [ $? -eq 0 ]; then
   echo 'docker-compose has been installed.'
 else

@@ -17,4 +17,4 @@ else
 fi
 
 rm -fr node*
-source /etc/profile
+#脚本执行完成后，记得在bash里source /etc/profile

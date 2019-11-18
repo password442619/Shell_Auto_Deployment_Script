@@ -1,6 +1,6 @@
 #!/bin/bash
-if [ -e node-v10.11.0-linux-x64.tar.gz ]; then
-  echo "node-v10.11.0-linux-x64.tar.gz file has existed."
+if [ -e node-v13.1.0-linux-x64.tar.gz ]; then
+  echo "node-v13.1.0-linux-x64.tar.gz file has existed."
 else
   wget https://nodejs.org/download/release/v13.1.0/node-v13.1.0-linux-x64.tar.gz
 fi

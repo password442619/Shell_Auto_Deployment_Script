@@ -2,11 +2,11 @@
 if [ -e node-v10.11.0-linux-x64.tar.gz ]; then
   echo "node-v10.11.0-linux-x64.tar.gz file has existed."
 else
-  wget https://nodejs.org/download/release/v10.11.0/node-v10.11.0-linux-x64.tar.gz
+  wget https://nodejs.org/download/release/v13.1.0/node-v13.1.0-linux-x64.tar.gz
 fi
 
-tar zxvf node-v10.11.0-linux-x64.tar.gz > /dev/null
-mv node-v10.11.0-linux-x64 node && cp -r node /usr/local/
+tar zxvf node-v13.1.0-linux-x64.tar.gz > /dev/null
+mv node-v13.1.0-linux-x64 node && cp -r node /usr/local/
 
 p=`grep NODE_HOME /etc/profile|wc -l`
 if [ $p -eq 0 ]; then

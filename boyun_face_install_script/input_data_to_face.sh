@@ -1,4 +1,4 @@
-#!/usr/bin/expect
+#!/bin/bash
 username=$1
 password=$2
 expect << EOF

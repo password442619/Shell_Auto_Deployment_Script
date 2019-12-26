@@ -443,3 +443,4 @@ cd /usr/local/boyun_services/${boyun_floder[wmfs]} && nohup ./wmfs &
 cd /usr/local/boyun_services/${boyun_floder[wmfe]} && nohup ./wmfe &
 cd /usr/local/fas/server/ && nohup java -jar face-1.3.5R.jar &
 EOF
+#人像系统部署主脚本

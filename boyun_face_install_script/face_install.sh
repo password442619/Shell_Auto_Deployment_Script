@@ -19,9 +19,9 @@ fi
 ####cuda8.0环境监测###########
 have_cuda=`ls /usr/local/|grep -i cuda|wc -l`
 if [ -n $have_cuda ] && [ $have_cuda -ge 2 ];then
-	cuda_version=`ls /usr/local/|grep -i cuda|sed -n '2p'`
+	cuda_version=`ls /usr/local/|grep -i cuda-8.0`
 	echo "CUDA Version:$cuda_version"
-	if [ $cuda_version == "cuda-10.0" ];then
+	if [ $cuda_version != "cuda-8.0" ];then
 		echo "Error:Please install cuda-8.0 environment!"
 		exit 0
 	fi
@@ -44,8 +44,8 @@ system_flag=$?
 if [ $system_flag == 0 ];then
 	mkdir /etc/yum.repos.d/Bak
 	mv /etc/yum.repos.d/CentOS* /etc/yum.repos.d/Bak
-	wget -O /etc/yum.repos.d/Centos-7.repo http://mirrors.aliyun.com/repo/Centos-7.repo
-	yum clean all && yum makecache fast > /dev/null
+	wget -O /etc/yum.repos.d/Centos-7.repo http://mirrors.aliyun.com/repo/Centos-7.repo > /dev/null
+	yum clean all && yum makecache fast
 else
 	echo "Please use CentOS 7.5 operating system."
 	exit 0
@@ -76,7 +76,7 @@ cat >> /usr/local/boyun_services/messages.txt << EOF
 `date +%Y%m%d` The mysql password: $modify_mysql_password
 EOF
 		#modify_mysql_password='Boyun@2019'
-		sh $now_dir/modify_mysql_password.sh 
+		sh $now_dir/modify_mysql_password.sh $init_mysql_message > /dev/null
 		echo -e "\nMysql Account and Password: root $modify_mysql_password"
 		mysql_conf=`sed -n '/\[mysqld\]/=' /etc/my.cnf`
 		mysql_bind=`sed -n '/bind-address=/=' /etc/my.cnf|wc -l`
@@ -388,7 +388,7 @@ mkdir -p /usr/local/fas/server/temp
 mv /usr/local/boyun_services/face_plate/* /usr/local/fas/server
 mv /usr/local/boyun_services/ffmpeg /usr/local/bin/
 chmod +x /usr/local/bin/ffmpeg
-sh $now_dir/input_data_to_face.sh root Boyun@2019
+sh $now_dir/input_data_to_face.sh root Boyun@2019 > /dev/null
 cat > /usr/local/fas/server/application.yml << EOF
 spring:
   profiles:

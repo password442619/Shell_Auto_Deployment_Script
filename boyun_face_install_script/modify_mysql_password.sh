@@ -14,3 +14,4 @@ expect << EOF
 	expect "mysql>" {send "exit;\r";}
 EOF
 exit
+#数据库创库，改密码

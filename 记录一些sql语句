@@ -1,0 +1,6 @@
+#select语句的where条件中套用select
+select basic_video_info_all.video_name,basic_video_info_all.save_path,basic_video_info_all.video_size,basic_video_info_all.video_weather,basic_video_info_all.video_light,basic_video_info_all.time_area,basic_video_info_all.device_name from basic_video_info_all where basic_video_info_all.dt_id in (select device_tags_info.id from device_tags_info as device_tags_info where device_tags_info.device_area like "%普通道路%");
+#INNER JOIN用法两张表组合为一个视图
+SELECT a.vt_id,b.id FROM basic_video_info a INNER JOIN video_tags_info b ON a.vt_id = b.id
+#LEFT JOIN将右边的表根据条件加到左边的表里，RIGHT用法与此相同
+SELECT * FROM basic_video_info_new a LEFT JOIN device_tags_info b ON a.dt_id = b.id;

@@ -1,5 +1,5 @@
 #!/bin/bash
-now_dir=`pwd`
+now_dir=`pwdx $$|awk -F " " '{print $2}'`
 ####确认显卡驱动状态和版本####
 nvidia_driver=`nvidia-smi|grep -i "Driver Version"`
 driver_flag=$?
@@ -42,8 +42,15 @@ fi
 operation_system=`uname -r|grep -i "el7.x86_64"`
 system_flag=$?
 if [ $system_flag == 0 ];then
-	mkdir /etc/yum.repos.d/Bak
-	mv /etc/yum.repos.d/CentOS* /etc/yum.repos.d/Bak
+	if [ -d /etc/yum.repos.d/Bak ];then
+		echo "Floder is already exist.OK~"
+	else
+		mkdir /etc/yum.repos.d/Bak
+	fi
+	check_repofile=`ls /etc/yum.repos.d/|grep CentOS|wc -l`
+	if [ $check_repofile != 0 ];then
+		mv /etc/yum.repos.d/CentOS* /etc/yum.repos.d/Bak
+	fi
 	wget -O /etc/yum.repos.d/Centos-7.repo http://mirrors.aliyun.com/repo/Centos-7.repo > /dev/null
 	yum clean all && yum makecache fast
 else
@@ -59,8 +66,11 @@ else
 	yum install -y epel-release > /dev/null
 	echo "Epel source is OK!"
 fi
+check_expect=`rpm -qa expect|wc -l`
+if [ $check_expect == 0 ];then
+	yum install -y expect.x86_64 > /dev/null
+fi
 ####mysql57 check####
-yum install -y expect.x86_64 > /dev/null
 check_mysql57=`rpm -qa mysql*|wc -l`
 if [ $check_mysql57 == 0 ];then
 	read -t 20 -n1 -p "Mysql57 is not detected.We will install mysql57 next.Do you want to continue [Y/N]?" answer
@@ -145,13 +155,13 @@ boyun_dict['wmvs']=$wmvs_value
 boyun_dict['wmfs']=$wmfs_value
 boyun_dict['wmfe']=$wmfe_value
 ####decompress service package####
-tar zxf ${boyun_dict[ise]} && rm -f ${boyun_dict[ise]}
-tar zxf ${boyun_dict[rmmt]} && rm -f ${boyun_dict[rmmt]}
-tar zxf ${boyun_dict[vas]} && rm -f ${boyun_dict[vas]}
-tar zxf ${boyun_dict[vfs]} && rm -f ${boyun_dict[vfs]}
-tar zxf ${boyun_dict[wmvs]} && rm -f ${boyun_dict[wmvs]}
-tar zxf ${boyun_dict[wmfs]} && rm -f ${boyun_dict[wmfs]}
-tar zxf ${boyun_dict[wmfe]} && rm -f ${boyun_dict[wmfe]}
+tar zxf ${boyun_dict[ise]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[ise]}
+tar zxf ${boyun_dict[rmmt]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[rmmt]}
+tar zxf ${boyun_dict[vas]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[vas]}
+tar zxf ${boyun_dict[vfs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[vfs]}
+tar zxf ${boyun_dict[wmvs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmvs]}
+tar zxf ${boyun_dict[wmfs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmfs]}
+tar zxf ${boyun_dict[wmfe]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmfe]}
 ###clean packages####
 chown -R root.root *
 cd /usr/local/boyun_services
@@ -443,4 +453,3 @@ cd /usr/local/boyun_services/${boyun_floder[wmfs]} && nohup ./wmfs &
 cd /usr/local/boyun_services/${boyun_floder[wmfe]} && nohup ./wmfe &
 cd /usr/local/fas/server/ && nohup java -jar face-1.3.5R.jar &
 EOF
-#人像系统部署主脚本

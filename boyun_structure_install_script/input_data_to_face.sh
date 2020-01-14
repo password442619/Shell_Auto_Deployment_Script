@@ -12,3 +12,4 @@ expect << EOF
 	expect "mysql>" {send "exit;\r";}
 EOF
 exit
+#向vss库中刷数据

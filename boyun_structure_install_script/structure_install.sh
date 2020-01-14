@@ -43,12 +43,12 @@ operation_system=`uname -r|grep -i "el7.x86_64"`
 system_flag=$?
 if [ $system_flag == 0 ];then
 	if [ -d /etc/yum.repos.d/Bak ];then
-		echo "/etc/yum.repos.d/Bak OK~"
+		echo "Floder is exist.OK~"
 	else
 		mkdir /etc/yum.repos.d/Bak
 	fi
-	check_CentOS=`ls /etc/yum.repos.d/|grep CentOS*|wc -l`
-	if [ $check_CentOS != 0 ];then
+	check_repofile=`ls /etc/yum.repos.d/|grep CentOS|wc -l`
+	if [ $check_repofile != 0 ];then
 		mv /etc/yum.repos.d/CentOS* /etc/yum.repos.d/Bak
 	fi
 	wget -O /etc/yum.repos.d/Centos-7.repo http://mirrors.aliyun.com/repo/Centos-7.repo > /dev/null
@@ -65,6 +65,13 @@ else
 	echo "Start install epel source......"
 	yum install -y epel-release > /dev/null
 	echo "Epel source is OK!"
+fi
+check_expect=`rpm -qa expect|wc -l`
+if [ $check_expect == 1 ];then
+	echo "Expect has already installed.OK~"
+else
+	echo "We will install expect.x86_64......"
+	yum install -y expect.x86_64
 fi
 ####mysql57 check####
 check_expect=`yum list installed|grep expect|wc -l`
@@ -116,6 +123,7 @@ cat >> /usr/local/boyun_services/messages.txt << EOF
 `date +%Y%m%d` The mysql password: $mysql_password
 EOF
 fi
+rm -rf /usr/local/boyun_services/mysql57
 ####redis check####
 check_redis=`rpm -qa redis|wc -l`
 if [ $check_redis == 0 ];then
@@ -135,33 +143,32 @@ else
 	systemctl start redis && systemctl enable redis
 fi
 ####clickhouse####
-check_clickhouse=`rpm -qa clickhouse*|wc -l`
+check_clickhouse=`yum list installed|grep clickhouse|wc -l`
 if [ $check_clickhouse == 0 ];then
 	cd /usr/local/boyun_services/clickhouse-install && yum install -y clickhouse*
-	rm -fr /usr/local/boyun_services/clickhouse-install
-	max_threads=`grep 'processor' /proc/cpuinfo |sort -u |wc -l`
-	max_block_size=`sed -n '/<max_block_size>/=' /etc/clickhouse-server/config.xml`
-	if [ -z $max_block_size ];then
-	    sed -i "87a <max_block_size>16384</max_block_size>" /etc/clickhouse-server/config.xml
-	fi
-	max_threads_cfg=`sed -n '/<max_threads>/=' /etc/clickhouse-server/config.xml`
-	max_threads=`grep 'processor' /proc/cpuinfo |sort -u |wc -l`
-	if [ -z $max_threads_cfg ];then
-	    sed -i "87a <max_threads>$max_threads</max_threads>" /etc/clickhouse-server/config.xml
-	fi
-	if [ -d /data/isedb/tmp ];then
-		echo "Folder /data/isedb/tmp already exists.OK~"
-	else
-		mkdir -p /data/isedb/tmp
-	fi
-	chown -R clickhouse.clickhouse /data/isedb
-	sed -i '114c <path>/data/isedb/</path>' /etc/clickhouse-server/config.xml
-	sed -i '117c <tmp_path>/data/isedb/tmp</tmp_path>' /etc/clickhouse-server/config.xml
-	sed -i '70c <listen_host>::</listen_host>' /etc/clickhouse-server/config.xml
-	systemclt enable clickhouse-server && systemctl start clickhouse-server
 else
-	echo "Clickhouse-server already exists. OK~"
+	echo "Clickhouse is OK~"
 fi
+max_threads=`grep 'processor' /proc/cpuinfo |sort -u |wc -l`
+max_block_size=`sed -n '/<max_block_size>/=' /etc/clickhouse-server/config.xml`
+if [ -z $max_block_size ];then
+    sed -i "87a <max_block_size>16384</max_block_size>" /etc/clickhouse-server/config.xml
+fi
+max_threads_cfg=`sed -n '/<max_threads>/=' /etc/clickhouse-server/config.xml`
+max_threads=`grep 'processor' /proc/cpuinfo |sort -u |wc -l`
+if [ -z $max_threads_cfg ];then
+    sed -i "87a <max_threads>$max_threads</max_threads>" /etc/clickhouse-server/config.xml
+fi
+if [ -d /data/isedb/tmp ];then
+	echo "Folder /data/isedb/tmp already exists.OK~"
+else
+	mkdir -p /data/isedb/tmp
+fi
+chown -R clickhouse.clickhouse /data/isedb
+sed -i '114c <path>/data/isedb/</path>' /etc/clickhouse-server/config.xml
+sed -i '117c <tmp_path>/data/isedb/tmp</tmp_path>' /etc/clickhouse-server/config.xml
+sed -i '70c <listen_host>::</listen_host>' /etc/clickhouse-server/config.xml
+systemctl enable clickhouse-server && systemctl start clickhouse-server
 ####start install engineering####
 ####Install dependency Library####
 echo "Now we started to install dependency Library"
@@ -203,7 +210,7 @@ tar zxf ${boyun_dict[wmzt]} && rm -f ${boyun_dict[wmzt]}
 ###clean packages####
 cd /usr/local/boyun_services
 chown -R root.root *
-mv /usr/local/boyun_services/vss/ /usr/local/
+mv vss/ /usr/local/
 cnn_floder=`ls|grep -i cnn*`
 ise_floder=`ls|grep ise_v*`
 rmmt_floder=`ls|grep rmmt*`
@@ -496,12 +503,13 @@ else
 	chmod +x /usr/local/bin/ffmpeg
 fi
 tomcat=`ls /usr/local/vss/server/|grep apache`
-tar zxf /usr/local/vss/server/$tomcat -C /usr/local/vss/server
-tar zxf /usr/local/vss/server/vss.tar.gz -C /usr/local/vss/server
-rm -f /usr/local/vss/server/*.tar.gz
+tar zxf /usr/local/vss/server/$tomcat -C /usr/local/vss/server/
+tar zxf /usr/local/vss/server/vss.tar.gz -C /usr/local/vss/server/
+rm -f /usr/local/vss/server/$tomcat
+rm -f /usr/local/vss/server/vss.tar.gz
 mv /usr/local/vss/server/vss /usr/local/vss/server/ROOT
 cd /usr/local/vss/server/
-tar zxf /usr/local/vss/web/dist.tar.gz -C /usr/local/vss/web
+tar zxf /usr/local/vss/web/dist.tar.gz -C /usr/local/vss/web/
 rm -f /usr/local/vss/web/dist.tar.gz
 find /usr/local/vss/ -name ".*" -exec rm -rf {} \;
 rm -fr /usr/local/vss/server/apache-tomcat-8.0.36/webapps/ROOT/
@@ -587,10 +595,9 @@ redis.pool.testOnReturn=true
 redis.pool.testWhileIdle=true
 EOF
 ####Install structure plate web####
-check_nginx=`yum list installed |grep nginx`
-flag_nginx=$?
-if [ $flag_nginx == 1 ];then
-	yum install -y nginx > /dev/null
+check_nginx=`yum list installed |grep nginx|wc -l`
+if [ $check_nginx == 1 ];then
+	yum install -y nginx
 fi
 cat > /usr/local/vss/web/dist/static/config/config.prod.js << EOF
 'use strict'
@@ -599,7 +606,7 @@ var _global = {}
 _global.config = { 
   NODE_ENV: 'production',
   ADD_CASE_AIS: 'true',
-  API_HOST: 'http://$ip_adress:8080/',
+  API_HOST: 'http://$ip_address:8080/',
   HOME_URL: '/home',
   LOGIN_URL :'login',
   mapOptions: {

@@ -648,4 +648,5 @@ cd /usr/local/boyun_services/${boyun_floder[wmzt]} && nohup ./wmzt &
 /usr/local/vss/server/apache-tomcat-8.0.36/bin/startup.sh
 nginx -s reload
 #服务启动后执行一下ise_db_v2.1.5.py脚本，此脚本为初始化clickhouse数据库的脚本。
+#注意ise_db_v2.1.5.py里的api.rt_delete_db("wmzt_vehicle"),api.rt_delete_db("wmzt_pedestrain")和api.rt_delete_db("wmzt_bike")，此三行语句为删除clickhouse中的wmzt_vehicle,wmzt_pedestrain,wmzt_bike三个数据库，首次部署时应将此三行注释掉。
 EOF

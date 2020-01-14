@@ -1,5 +1,5 @@
 #!/bin/bash
-now_dir=`pwd`
+now_dir=`pwdx $$|awk -F " " '{print $2}'`
 ####确认显卡驱动状态和版本####
 nvidia_driver=`nvidia-smi|grep -i "Driver Version"`
 driver_flag=$?

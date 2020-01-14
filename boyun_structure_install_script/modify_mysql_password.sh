@@ -13,3 +13,4 @@ expect << EOF
 	expect "mysql>" {send "exit;\r";}
 EOF
 exit
+#修改mysql密码并创建数据库

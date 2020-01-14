@@ -199,14 +199,14 @@ boyun_dict['wmvs']=$wmvs_value
 boyun_dict['wmfs']=$wmfs_value
 boyun_dict['wmzt']=$wmzt_value
 ####decompress service package####
-tar zxf ${boyun_dict[cnn]} && rm -f ${boyun_dict[cnn]}
-tar zxf ${boyun_dict[ise]} && rm -f ${boyun_dict[ise]}
-tar zxf ${boyun_dict[rmmt]} && rm -f ${boyun_dict[rmmt]}
-tar zxf ${boyun_dict[vas]} && rm -f ${boyun_dict[vas]}
-tar zxf ${boyun_dict[vss]} && rm -f ${boyun_dict[vss]}
-tar zxf ${boyun_dict[wmvs]} && rm -f ${boyun_dict[wmvs]}
-tar zxf ${boyun_dict[wmfs]} && rm -f ${boyun_dict[wmfs]}
-tar zxf ${boyun_dict[wmzt]} && rm -f ${boyun_dict[wmzt]}
+tar zxf ${boyun_dict[cnn]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[cnn]}
+tar zxf ${boyun_dict[ise]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[ise]}
+tar zxf ${boyun_dict[rmmt]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[rmmt]}
+tar zxf ${boyun_dict[vas]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[vas]}
+tar zxf ${boyun_dict[vss]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[vss]}
+tar zxf ${boyun_dict[wmvs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmvs]}
+tar zxf ${boyun_dict[wmfs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmfs]}
+tar zxf ${boyun_dict[wmzt]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmzt]}
 ###clean packages####
 cd /usr/local/boyun_services
 chown -R root.root *

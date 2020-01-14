@@ -168,6 +168,7 @@ chown -R clickhouse.clickhouse /data/isedb
 sed -i '114c <path>/data/isedb/</path>' /etc/clickhouse-server/config.xml
 sed -i '117c <tmp_path>/data/isedb/tmp</tmp_path>' /etc/clickhouse-server/config.xml
 sed -i '70c <listen_host>::</listen_host>' /etc/clickhouse-server/config.xml
+rm -fr /usr/local/boyun_services/clickhouse*
 systemctl enable clickhouse-server && systemctl start clickhouse-server
 ####start install engineering####
 ####Install dependency Library####

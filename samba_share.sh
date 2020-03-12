@@ -26,7 +26,7 @@ cat << EOF >> /etc/samba/smb.conf
         browseable = yes
         writeable = yes
         guest ok = yes
-	public = yes
+    	public = yes
 EOF
 firewall-cmd --add-service=samba --permanent
 firewall-cmd --reload

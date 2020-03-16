@@ -37,6 +37,7 @@ if [ $network_flag == 0 ];then
 	echo "Network Environment is OK."
 else
 	echo "Unabel to connect to the Internet!!Please install mysql,redis manually."
+	exit 0
 fi
 ####Increase yum source#####
 operation_system=`uname -r|grep -i "el7.x86_64"`
@@ -74,7 +75,7 @@ fi
 check_mysql57=`rpm -qa mysql*|wc -l`
 mysql_port=`ss -tnl|grep 3306|wc -l`
 if [ $check_mysql57 == 0 && $mysql_port == 0 ];then
-	read -t 30 -n1 -p "Mysql57 is not detected.We will install mysql57 next.Do you want to continue [Y/N]?" answer
+	read -t 30 -n1 -p "Mysql57 is not detected.We will install mysql57 next.Now you have 30 seconds to make your choice.Do you want to continue [Y/N]?" answer
 	if [ $answer == "Y" ] || [ $answer == "y" ];then
 		echo -e "\nWe will install mysql57."
 		cd /usr/local/boyun_services/mysql57 && yum install mysql* -y

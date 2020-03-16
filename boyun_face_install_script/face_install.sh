@@ -36,7 +36,7 @@ network_flag=$?
 if [ $network_flag == 0 ];then
 	echo "Network Environment is OK."
 else
-	echo "Unabel to connect to the Internet!!Please install mysql,redis,docker,node,pm2 manually."
+	echo "Unabel to connect to the Internet!!Please install mysql,redis manually."
 fi
 ####Increase yum source#####
 operation_system=`uname -r|grep -i "el7.x86_64"`
@@ -72,22 +72,23 @@ if [ $check_expect == 0 ];then
 fi
 ####mysql57 check####
 check_mysql57=`rpm -qa mysql*|wc -l`
-if [ $check_mysql57 == 0 ];then
-	read -t 20 -n1 -p "Mysql57 is not detected.We will install mysql57 next.Do you want to continue [Y/N]?" answer
+mysql_port=`ss -tnl|grep 3306|wc -l`
+if [ $check_mysql57 == 0 && $mysql_port == 0 ];then
+	read -t 30 -n1 -p "Mysql57 is not detected.We will install mysql57 next.Do you want to continue [Y/N]?" answer
 	if [ $answer == "Y" ] || [ $answer == "y" ];then
 		echo -e "\nWe will install mysql57."
 		cd /usr/local/boyun_services/mysql57 && yum install mysql* -y
 		systemctl start mysqld && systemctl enable mysqld > /dev/null
 		init_mysql_message=`grep "temporary password" /var/log/mysqld.log|awk -F " " '{print $11}'`
 		touch /usr/local/boyun_services/messages.txt
-		modify_mysql_password='Boyun@2019'
+		mysql_password='Boyun@2019'
 cat >> /usr/local/boyun_services/messages.txt << EOF
 `date +%Y%m%d` The mysql account: root
-`date +%Y%m%d` The mysql password: $modify_mysql_password
+`date +%Y%m%d` The mysql password: $mysql_password
 EOF
-		#modify_mysql_password='Boyun@2019'
+		#mysql_password='Boyun@2019'
 		sh $now_dir/modify_mysql_password.sh $init_mysql_message > /dev/null
-		echo -e "\nMysql Account and Password: root $modify_mysql_password"
+		echo -e "\nMysql Account and Password: root $mysql_password"
 		mysql_conf=`sed -n '/\[mysqld\]/=' /etc/my.cnf`
 		mysql_bind=`sed -n '/bind-address=/=' /etc/my.cnf|wc -l`
 		mysql_port=`sed -n '/port=/=' /etc/my.cnf|wc -l`
@@ -155,15 +156,15 @@ boyun_dict['wmvs']=$wmvs_value
 boyun_dict['wmfs']=$wmfs_value
 boyun_dict['wmfe']=$wmfe_value
 ####decompress service package####
-tar zxf ${boyun_dict[ise]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[ise]}
-tar zxf ${boyun_dict[rmmt]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[rmmt]}
-tar zxf ${boyun_dict[vas]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[vas]}
-tar zxf ${boyun_dict[vfs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[vfs]}
-tar zxf ${boyun_dict[wmvs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmvs]}
-tar zxf ${boyun_dict[wmfs]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmfs]}
-tar zxf ${boyun_dict[wmfe]} -C /usr/local/boyun_services/ && rm -f ${boyun_dict[wmfe]}
+tar zxf ${boyun_dict[ise]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[ise]}
+tar zxf ${boyun_dict[rmmt]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[rmmt]}
+tar zxf ${boyun_dict[vas]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[vas]}
+tar zxf ${boyun_dict[vfs]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[vfs]}
+tar zxf ${boyun_dict[wmvs]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[wmvs]}
+tar zxf ${boyun_dict[wmfs]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[wmfs]}
+tar zxf ${boyun_dict[wmfe]} -C /usr/local/boyun_services/ && rm -f /usr/local/boyun_services/${boyun_dict[wmfe]}
 ###clean packages####
-chown -R root.root *
+chown -R root.root /usr/local/boyun_services/*
 cd /usr/local/boyun_services
 ise_floder=`ls|grep ise*`
 rmmt_floder=`ls|grep rmmt*`
@@ -188,7 +189,7 @@ cd /usr/local/boyun_services/${boyun_floder[wmvs]} && rm -f nohup.out logs/*
 cd /usr/local/boyun_services/${boyun_floder[wmfs]} && rm -f nohup.out logs/*
 cd /usr/local/boyun_services/${boyun_floder[wmfe]} && rm -f nohup.out logs/*
 ####ise_d.cfg####
-mkdir -p /data/ise_facedb/
+mkdir -p /data/ise_facedb/ #需要在data下有比较大的空间
 chmod +w /usr/local/boyun_services/${boyun_floder[ise]}/ise_d.cfg
 cat > /usr/local/boyun_services/${boyun_floder[ise]}/ise_d.cfg << EOF
 [engine]
@@ -372,7 +373,7 @@ port = 6379
 db_type=mysql
 db_conn_url=127.0.0.1:3306/fres_test
 db_uname=root
-db_pswd=Boyun@2019
+db_pswd=$mysql_password
 db_init_paras=set charset utf8
 
 [gy_face]
@@ -398,7 +399,7 @@ mkdir -p /usr/local/fas/server/temp
 mv /usr/local/boyun_services/face_plate/* /usr/local/fas/server
 mv /usr/local/boyun_services/ffmpeg /usr/local/bin/
 chmod +x /usr/local/bin/ffmpeg
-sh $now_dir/input_data_to_face.sh root Boyun@2019 > /dev/null
+sh $now_dir/input_data_to_face.sh root $mysql_password > /dev/null
 cat > /usr/local/fas/server/application.yml << EOF
 spring:
   profiles:
@@ -413,7 +414,7 @@ mysql:
   host: 127.0.0.1
   port: 3306
   username: root
-  password: Boyun@2019
+  password: $mysql_password
 redis:
   database: 0
   host: $ip_address

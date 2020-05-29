@@ -4,6 +4,11 @@ grep ".jpg$" infor.txt > info_new.txt #查找info.txt中以“.jpg”结尾的�
 #按行读取info_new.txt,赋值给变量d
 for d in `awk '{print $1}' info_new.txt`
 do
-  #移动文件
-  mv $d /mnt/jiaqiang/heze/0528/${d:24:20} #${d:24:20}表示截取变量d，从第24个字符截取，取20位
+  if [ -d /mnt/jiaqiang/heze/0528/${d:24:20} ]; then
+    #移动文件
+    mv $d /mnt/jiaqiang/heze/0528/${d:24:20} #${d:24:20}表示截取变量d，从第24个字符截取，取20位
+  else
+    mkdir /mnt/jiaqiang/heze/0528/${d:24:20}
+    mv $d /mnt/jiaqiang/heze/0528/${d:24:20}
+  fi
 done
